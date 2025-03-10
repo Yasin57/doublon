@@ -289,3 +289,28 @@ def demo_axis5(dir1: str, dir2: str):
     
     copied_count = copy_unique_files(dir1, dir2)
     print(f"Nombre de fichiers copiés: {copied_count}")
+
+    if __name__ == "__main__":
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Gestionnaire de fichiers en doublons")
+    parser.add_argument('--axe', type=int, choices=[1, 2, 3, 4, 5], required=True, 
+                        help="L'axe à exécuter (1-5)")
+    parser.add_argument('--dir1', required=True, help="Premier répertoire")
+    parser.add_argument('--dir2', help="Deuxième répertoire (requis pour les axes 3, 4 et 5)")
+    
+    args = parser.parse_args()
+    
+    if args.axe in [3, 4, 5] and not args.dir2:
+        parser.error("L'argument --dir2 est requis pour les axes 3, 4 et 5")
+    
+    if args.axe == 1:
+        demo_axis1(args.dir1)
+    elif args.axe == 2:
+        demo_axis2(args.dir1)
+    elif args.axe == 3:
+        demo_axis3(args.dir1, args.dir2)
+    elif args.axe == 4:
+        demo_axis4(args.dir1, args.dir2)
+    elif args.axe == 5:
+        demo_axis5(args.dir1, args.dir2)
