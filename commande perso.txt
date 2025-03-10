@@ -1,3 +1,12 @@
 ls
 
 python3 main.py --axe 1 --dir1 test_dir1
+
+python3 main.py --axe 1 --dir1 test_dir2
+
+
+On a modifier les noms des répertoire car sinon le code python supprimer a chaque fois les fichiers doublons...
+(ce qui n'est pas pratique pour la démonstration du programme.)
+
+on peut apercevoir au niveau du code sur le deleted que les répertoires sont nommé dir1 et dir2
+désormais le nom est test_dir1 test_dir2
