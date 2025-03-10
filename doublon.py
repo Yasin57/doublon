@@ -1,6 +1,7 @@
 import os
 import hashlib
 import time
+import shutil
 from datetime import datetime
 from typing import List, Dict, Set, Tuple, Optional
 
@@ -16,18 +17,6 @@ class File:
         self.modification_date = datetime.fromtimestamp(self.modification_time)
         self._md5 = None
         self._first_bytes = None
-    def __eq__(self, other):
-        if not isinstance(other, File):
-            return False
-        # Deux fichiers sont considérés identiques si leur taille et MD5 sont identiques
-        return self.size == other.size and self.md5 == other.md5
-    
-    def __hash__(self):
-        # Pour pouvoir utiliser les fichiers dans des sets ou comme clés de dictionnaires
-        return hash((self.size, self.md5))
-    
-    def __str__(self):
-        return f"File(name='{self.name}', size={self.size}, md5={self.md5}, modified={self.modification_date})"
 
     @property
     def first_bytes_hex(self) -> str:
@@ -48,7 +37,21 @@ class File:
                 self._md5 = hash_md5.hexdigest()
         return self._md5
     
-        def scan_directory(directory: str) -> List[File]:
+    def __eq__(self, other):
+        if not isinstance(other, File):
+            return False
+        # Deux fichiers sont considérés identiques si leur taille et MD5 sont identiques
+        return self.size == other.size and self.md5 == other.md5
+    
+    def __hash__(self):
+        # Pour pouvoir utiliser les fichiers dans des sets ou comme clés de dictionnaires
+        return hash((self.size, self.md5))
+    
+    def __str__(self):
+        return f"File(name='{self.name}', size={self.size}, md5={self.md5}, modified={self.modification_date})"
+
+
+def scan_directory(directory: str) -> List[File]:
     """
     Parcourt récursivement un répertoire et retourne la liste des objets File
     """
@@ -102,6 +105,7 @@ def find_duplicates(files: List[File]) -> Dict[str, List[File]]:
     duplicates = {md5: group for md5, group in md5_groups.items() if len(group) > 1}
     
     return duplicates
+
 
 def get_directory_size_by_type(directory: str) -> Dict[str, int]:
     """
@@ -169,7 +173,6 @@ def compare_directories(dir1: str, dir2: str) -> Tuple[List[File], List[File]]:
     
     return duplicates, unique_files
 
-import shutil
 
 def delete_duplicates(dir1: str, dir2: str) -> int:
     """
@@ -219,7 +222,8 @@ def copy_unique_files(dir1: str, dir2: str) -> int:
     
     return copied_count
 
-# Fonctions de démonstration pour les 5 axes
+
+# Fonctions de démonstration pour les 4 axes
 
 def demo_axis1(directory: str):
     """Démo de l'axe 1: Analyse d'un répertoire pour trouver les doublons"""
@@ -290,7 +294,8 @@ def demo_axis5(dir1: str, dir2: str):
     copied_count = copy_unique_files(dir1, dir2)
     print(f"Nombre de fichiers copiés: {copied_count}")
 
-    if __name__ == "__main__":
+
+if __name__ == "__main__":
     import argparse
     
     parser = argparse.ArgumentParser(description="Gestionnaire de fichiers en doublons")
