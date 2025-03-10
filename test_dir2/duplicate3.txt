@@ -1,0 +1,1 @@
+Ce fichier est un doublon entre dir1 et dir2

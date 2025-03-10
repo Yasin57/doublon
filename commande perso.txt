@@ -1,0 +1,3 @@
+ls
+
+python3 main.py --axe 1 --dir1 test_dir1

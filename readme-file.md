@@ -42,7 +42,7 @@ Arguments :
 - `--dir1` : Chemin vers le premier répertoire
 - `--dir2` : Chemin vers le deuxième répertoire (requis pour les axes 3, 4 et 5)
 
-### Exemples concrets avec tes répertoires :
+### Exemples concrets avec mes répertoires :
 
 ```bash
 # Analyse de test_dir1 pour trouver les doublons
