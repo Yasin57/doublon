@@ -42,23 +42,23 @@ Arguments :
 - `--dir1` : Chemin vers le premier répertoire
 - `--dir2` : Chemin vers le deuxième répertoire (requis pour les axes 3, 4 et 5)
 
-Exemples :
+### Exemples concrets avec tes répertoires :
 
 ```bash
-# Analyse d'un répertoire pour trouver les doublons
-python main.py --axe 1 --dir1 /chemin/vers/mon/dossier
+# Analyse de test_dir1 pour trouver les doublons
+python main.py --axe 1 --dir1 test_dir1
 
-# Calcul des tailles par type de fichier
-python main.py --axe 2 --dir1 /chemin/vers/mon/dossier
+# Analyse de l'espace disque par type de fichiers dans test_dir1
+python main.py --axe 2 --dir1 test_dir1
 
-# Comparaison de deux répertoires
-python main.py --axe 3 --dir1 /chemin/vers/dossier1 --dir2 /chemin/vers/dossier2
+# Comparaison des fichiers entre test_dir1 et test_dir2
+python main.py --axe 3 --dir1 test_dir1 --dir2 test_dir2
 
-# Suppression des doublons
-python main.py --axe 4 --dir1 /chemin/vers/dossier1 --dir2 /chemin/vers/dossier2
+# Suppression des doublons dans test_dir2 en fonction de test_dir1
+python main.py --axe 4 --dir1 test_dir1 --dir2 test_dir2
 
-# Rapatriement des fichiers uniques
-python main.py --axe 5 --dir1 /chemin/vers/dossier1 --dir2 /chemin/vers/dossier2
+# Rapatriement des fichiers uniques de test_dir2 vers test_dir1
+python main.py --axe 5 --dir1 test_dir1 --dir2 test_dir2
 ```
 
 ## Implémentation
@@ -89,3 +89,4 @@ Le programme utilise uniquement des modules de la bibliothèque standard Python 
 - `shutil`
 - `datetime`
 - `argparse`
+
