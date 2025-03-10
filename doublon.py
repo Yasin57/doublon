@@ -218,3 +218,74 @@ def copy_unique_files(dir1: str, dir2: str) -> int:
             print(f"Erreur lors de la copie de {file2.path}: {e}")
     
     return copied_count
+
+# Fonctions de démonstration pour les 5 axes
+
+def demo_axis1(directory: str):
+    """Démo de l'axe 1: Analyse d'un répertoire pour trouver les doublons"""
+    print(f"\n--- AXE 1: ANALYSE DES DOUBLONS DANS {directory} ---")
+    files = scan_directory(directory)
+    print(f"Nombre total de fichiers: {len(files)}")
+    
+    duplicates = find_duplicates(files)
+    total_duplicates = sum(len(group) for group in duplicates.values())
+    
+    print(f"Nombre de groupes de doublons: {len(duplicates)}")
+    print(f"Nombre total de fichiers en doublons: {total_duplicates}")
+    
+    for md5, group in duplicates.items():
+        print(f"\nGroupe de doublons (MD5: {md5}):")
+        for file in group:
+            print(f"  - {file.path} (Taille: {file.size} octets, Modifié: {file.modification_date})")
+
+
+def demo_axis2(directory: str):
+    """Démo de l'axe 2: Calcul des tailles par type de fichier"""
+    print(f"\n--- AXE 2: SOMME DES TAILLES PAR TYPE DANS {directory} ---")
+    sizes = get_directory_size_by_type(directory)
+    
+    total_size = sum(sizes.values())
+    print(f"Taille totale: {total_size:,} octets ({total_size / (1024**2):.2f} Mo)")
+    
+    for category, size in sizes.items():
+        percentage = (size / total_size * 100) if total_size > 0 else 0
+        print(f"{category}: {size:,} octets ({size / (1024**2):.2f} Mo) - {percentage:.1f}%")
+
+
+def demo_axis3(dir1: str, dir2: str):
+    """Démo de l'axe 3: Comparaison de deux répertoires"""
+    print(f"\n--- AXE 3: COMPARAISON DE {dir1} ET {dir2} ---")
+    
+    duplicates, unique_files = compare_directories(dir1, dir2)
+    
+    print(f"Fichiers en doublons dans {dir2}: {len(duplicates)}")
+    for file in duplicates:
+        print(f"  - {file.path}")
+    
+    print(f"\nFichiers uniques dans {dir2}: {len(unique_files)}")
+    for file in unique_files:
+        print(f"  - {file.path}")
+
+
+def demo_axis4(dir1: str, dir2: str):
+    """Démo de l'axe 4: Suppression des doublons"""
+    print(f"\n--- AXE 4: SUPPRESSION DES DOUBLONS DE {dir2} QUI EXISTENT DANS {dir1} ---")
+    
+    # Demander confirmation
+    print(f"Attention: Cette opération va supprimer définitivement les fichiers en doublons de {dir2}.")
+    confirmation = input("Êtes-vous sûr de vouloir continuer? (oui/non): ")
+    
+    if confirmation.lower() != 'oui':
+        print("Opération annulée.")
+        return
+    
+    deleted_count = delete_duplicates(dir1, dir2)
+    print(f"Nombre de fichiers supprimés: {deleted_count}")
+
+
+def demo_axis5(dir1: str, dir2: str):
+    """Démo de l'axe 5: Rapatriement des fichiers uniques"""
+    print(f"\n--- AXE 5: RAPATRIEMENT DES FICHIERS UNIQUES DE {dir2} VERS {dir1} ---")
+    
+    copied_count = copy_unique_files(dir1, dir2)
+    print(f"Nombre de fichiers copiés: {copied_count}")
