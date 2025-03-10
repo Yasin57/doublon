@@ -168,3 +168,53 @@ def compare_directories(dir1: str, dir2: str) -> Tuple[List[File], List[File]]:
             unique_files.append(file2)
     
     return duplicates, unique_files
+
+import shutil
+
+def delete_duplicates(dir1: str, dir2: str) -> int:
+    """
+    Supprime les fichiers dans dir2 qui sont en doublons avec dir1
+    Retourne le nombre de fichiers supprimés
+    """
+    duplicates, _ = compare_directories(dir1, dir2)
+    deleted_count = 0
+    
+    for file in duplicates:
+        try:
+            os.remove(file.path)
+            deleted_count += 1
+            print(f"Supprimé: {file.path}")
+        except OSError as e:
+            print(f"Erreur lors de la suppression de {file.path}: {e}")
+    
+    return deleted_count
+
+
+def copy_unique_files(dir1: str, dir2: str) -> int:
+    """
+    Copie les fichiers uniques de dir2 vers dir1
+    Si un fichier de même nom existe déjà, garde celui qui a été modifié en dernier
+    Retourne le nombre de fichiers copiés
+    """
+    _, unique_files = compare_directories(dir1, dir2)
+    copied_count = 0
+    
+    for file2 in unique_files:
+        dest_path = os.path.join(dir1, file2.name)
+        
+        # Vérifier si un fichier du même nom existe déjà dans dir1
+        if os.path.exists(dest_path):
+            # Comparer les dates de modification
+            existing_mod_time = os.path.getmtime(dest_path)
+            if file2.modification_time <= existing_mod_time:
+                # Le fichier existant est plus récent, ne pas copier
+                continue
+        
+        try:
+            shutil.copy2(file2.path, dest_path)
+            copied_count += 1
+            print(f"Copié: {file2.path} -> {dest_path}")
+        except OSError as e:
+            print(f"Erreur lors de la copie de {file2.path}: {e}")
+    
+    return copied_count
