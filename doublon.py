@@ -102,3 +102,69 @@ def find_duplicates(files: List[File]) -> Dict[str, List[File]]:
     duplicates = {md5: group for md5, group in md5_groups.items() if len(group) > 1}
     
     return duplicates
+
+def get_directory_size_by_type(directory: str) -> Dict[str, int]:
+    """
+    Calcule la taille totale des fichiers par type dans un répertoire et ses sous-répertoires
+    """
+    extension_categories = {
+        'texte': ['.txt', '.doc', '.docx', '.odt', '.csv', '.xls', '.ppt', '.odp'],
+        'images': ['.jpg', '.png', '.bmp', '.gif', '.svg'],
+        'vidéo': ['.mp4', '.avi', '.mov', '.mpeg', '.wmv'],
+        'audio': ['.mp3', '.mp2', '.wav', '.bwf'],
+        'autre': []  # Tous les autres types
+    }
+    
+    # Initialiser les compteurs
+    size_by_category = {category: 0 for category in extension_categories.keys()}
+    
+    # Parcourir les fichiers
+    for root, _, filenames in os.walk(directory):
+        for filename in filenames:
+            path = os.path.join(root, filename)
+            try:
+                size = os.path.getsize(path)
+                _, ext = os.path.splitext(filename)
+                ext = ext.lower()
+                
+                # Déterminer la catégorie
+                category_found = False
+                for category, extensions in extension_categories.items():
+                    if category != 'autre' and ext in extensions:
+                        size_by_category[category] += size
+                        category_found = True
+                        break
+                
+                if not category_found:
+                    size_by_category['autre'] += size
+                    
+            except (PermissionError, FileNotFoundError) as e:
+                print(f"Erreur lors de l'accès au fichier {path}: {e}")
+    
+    return size_by_category
+
+
+def compare_directories(dir1: str, dir2: str) -> Tuple[List[File], List[File]]:
+    """
+    Compare deux répertoires et retourne:
+    1. Les fichiers de dir2 qui sont en doublons avec dir1
+    2. Les fichiers de dir2 qui sont uniques (non présents dans dir1)
+    """
+    # Analyser les deux répertoires
+    files_dir1 = scan_directory(dir1)
+    files_dir2 = scan_directory(dir2)
+    
+    # Créer un ensemble pour un accès rapide
+    files_dir1_set = set(files_dir1)
+    
+    # Identifier les doublons et les fichiers uniques
+    duplicates = []
+    unique_files = []
+    
+    for file2 in files_dir2:
+        if file2 in files_dir1_set:
+            duplicates.append(file2)
+        else:
+            unique_files.append(file2)
+    
+    return duplicates, unique_files
