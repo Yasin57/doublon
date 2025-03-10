@@ -16,6 +16,18 @@ class File:
         self.modification_date = datetime.fromtimestamp(self.modification_time)
         self._md5 = None
         self._first_bytes = None
+        def __eq__(self, other):
+        if not isinstance(other, File):
+            return False
+        # Deux fichiers sont considérés identiques si leur taille et MD5 sont identiques
+        return self.size == other.size and self.md5 == other.md5
+    
+    def __hash__(self):
+        # Pour pouvoir utiliser les fichiers dans des sets ou comme clés de dictionnaires
+        return hash((self.size, self.md5))
+    
+    def __str__(self):
+        return f"File(name='{self.name}', size={self.size}, md5={self.md5}, modified={self.modification_date})"
 
     @property
     def first_bytes_hex(self) -> str:
